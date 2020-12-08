@@ -35,29 +35,28 @@ private const val TAG = "GameFragment"
  * Fragment where the game is played
  */
 class GameFragment : Fragment() {
-
-
-
     private lateinit var binding: GameFragmentBinding
 
     private lateinit var viewModel: GameViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         // Inflate view and obtain an instance of the binding class
         binding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.game_fragment,
-                container,
-                false
+            inflater,
+            R.layout.game_fragment,
+            container,
+            false
         )
 
         Log.i(TAG, "Called ViewModelProvider.get()")
         viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
 
-        binding.correctButton.setOnClickListener{ viewModel.onCorrect() }
-        binding.skipButton.setOnClickListener{ viewModel.onSkip() }
+        binding.correctButton.setOnClickListener { viewModel.onCorrect() }
+        binding.skipButton.setOnClickListener { viewModel.onSkip() }
         binding.endGameButton.setOnClickListener(::onEndGame)
 
         viewModel.score.observe(viewLifecycleOwner) {
@@ -72,13 +71,11 @@ class GameFragment : Fragment() {
     }
 
 
-
-
     /** Methods for buttons presses **/
     private fun onEndGame(view: View) {
         Toast.makeText(activity, "Game has just finished", Toast.LENGTH_SHORT).show()
         val action = GameFragmentDirections.actionGameToScore()
-        action.score = viewModel.score.value?:0
+        action.score = viewModel.score.value ?: 0
         NavHostFragment.findNavController(this).navigate(action)
     }
 }
