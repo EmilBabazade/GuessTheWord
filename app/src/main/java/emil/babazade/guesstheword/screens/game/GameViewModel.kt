@@ -8,6 +8,10 @@ import androidx.lifecycle.ViewModel
 private const val TAG = "GameViewModel"
 
 class GameViewModel : ViewModel() {
+    private val _eventGameFinished = MutableLiveData<Boolean>()
+    val eventGameFinished: LiveData<Boolean>
+        get() = _eventGameFinished
+
     // The current word
     private val _word = MutableLiveData<String>()
     val word: LiveData<String>
@@ -68,8 +72,9 @@ class GameViewModel : ViewModel() {
      * Moves to the next word in the list
      */
     private fun nextWord() {
-        //Select and remove a word from the list
-        if (wordList.isNotEmpty())
+        if (wordList.isEmpty())
+            onGameFinish()
+        else //Select and remove a word from the list
             _word.value = wordList.removeAt(0)
     }
 
@@ -81,5 +86,13 @@ class GameViewModel : ViewModel() {
     fun onCorrect() {
         _score.value = _score.value?.plus(1)
         nextWord()
+    }
+
+    private fun onGameFinish() {
+        _eventGameFinished.value = true
+    }
+
+    fun onGameFinishComplete() {
+        _eventGameFinished.value = false
     }
 }
