@@ -44,8 +44,9 @@ class GameViewModel : ViewModel() {
         timer.start()
     }
 
-//    The String version of the current time
-    val currentTimeString = Transformations.map(currentTime) { time -> DateUtils.formatElapsedTime(time) }
+    //    The String version of the current time
+    val currentTimeString: LiveData<String> =
+        Transformations.map(currentTime) { time -> DateUtils.formatElapsedTime(time) }
 
     private val _eventGameFinished = MutableLiveData<Boolean>()
     val eventGameFinished: LiveData<Boolean>
@@ -55,6 +56,14 @@ class GameViewModel : ViewModel() {
     private val _word = MutableLiveData<String>()
     val word: LiveData<String>
         get() : LiveData<String> = _word
+
+    //    The current word hint
+    val wordHint: LiveData<String> = Transformations.map(word) { word ->
+        val randomPosition = (1..word.length).random()
+        "Current word has ${word.length} letters \nThe letter at position $randomPosition is ${
+            word[randomPosition - 1].toUpperCase()
+        }"
+    }
 
     // The current score
     private val _score = MutableLiveData<Int>()
